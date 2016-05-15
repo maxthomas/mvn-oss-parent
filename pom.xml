@@ -1,0 +1,317 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.maxthomas</groupId>
+  <artifactId>mvn-oss-parent</artifactId>
+  <version>1</version>
+  <packaging>pom</packaging>
+
+  <name>mvn-oss-parent</name>
+  <description>Parent pom.xml for open source Maven projects.</description>
+  <url>https://github.com/maxthomas/mvn-oss-parent</url>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <email>max@maxthomas.io</email>
+      <name>Max Thomas</name>
+      <url>https://github.com/maxthomas</url>
+      <id>maxthomas</id>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:maxthomas/${project.artifactId}.git</connection>
+    <developerConnection>scm:git:git@github.com:maxthomas/${project.artifactId}.git</developerConnection>
+    <url>https://github.com/maxthomas/${project.artifactId}/</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <url>https://github.com/maxthomas/${project.artifactId}/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <javac.version.src>1.8</javac.version.src>
+    <javac.version.target>1.8</javac.version.target>
+
+    <!-- Maven plugin versions -->
+    <version.plugin.jar>2.6</version.plugin.jar>
+    <version.plugin.compiler>3.5.1</version.plugin.compiler>
+    <version.plugin.javadoc>2.10.3</version.plugin.javadoc>
+    <version.plugin.release>2.5.3</version.plugin.release>
+    <version.plugin.surefire>2.18.1</version.plugin.surefire>
+    <version.plugin.failsafe>2.18.1</version.plugin.failsafe>
+    <version.plugin.source>3.0.0</version.plugin.source>
+    <version.plugin.enforcer>1.4.1</version.plugin.enforcer>
+    <version.plugin.assembly>2.6</version.plugin.assembly>
+
+    <slf4j.version>1.7.21</slf4j.version>
+    <guava.version>19.0</guava.version>
+    <log4j.version>2.5</log4j.version>
+    <jackson.version>2.7.4</jackson.version>
+  </properties>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.plugin.jar}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.7</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>2.7</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.9.1</version>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${version.plugin.assembly}</version>
+          <configuration>
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id> <!-- this is used for inheritance merges -->
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>${version.plugin.surefire}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${version.plugin.enforcer}</version>
+        <executions>
+          <execution>
+            <id>enforce-property</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[${javac.version.src},)</version>
+                  <message>[ERROR] The currently supported version of Java is 1.8 or higher</message>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.0.4,)</version>
+                  <message>[ERROR] The currently supported version of Maven is 3.0.4 or higher</message>
+                </requireMavenVersion>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${javac.version.src}</source>
+          <target>${javac.version.target}</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <optimize>true</optimize>
+        </configuration>
+        <version>${version.plugin.compiler}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.plugin.surefire}</version>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${version.plugin.javadoc}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <quiet />
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.4</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>3.0.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.8</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.7</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${version.plugin.surefire}</version>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <profiles>
+    <profile>
+      <id>doclint-java8-disable</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+    </profile>
+    <profile>
+      <!-- Skip javadoc generation by using this profile. -->
+      <id>dev</id>
+      <properties>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+      </properties>
+    </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.javadoc}</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <quiet>true</quiet>
+                  <archive>
+                    <manifest>
+                      <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                      <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                    </manifest>
+                    <manifestEntries>
+                      <Implementation-Build-Date>${maven.build.timestamp}</Implementation-Build-Date>
+                      <X-Compile-Source-JDK>${javac.src.version}</X-Compile-Source-JDK>
+                      <X-Compile-Target-JDK>${javac.target.version}</X-Compile-Target-JDK>
+                    </manifestEntries>
+                  </archive>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${version.plugin.source}</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+                <configuration>
+                  <archive>
+                    <manifest>
+                      <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                      <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                    </manifest>
+                    <manifestEntries>
+                      <Implementation-Build-Date>${maven.build.timestamp}</Implementation-Build-Date>
+                      <X-Compile-Source-JDK>${javac.version.src}</X-Compile-Source-JDK>
+                      <X-Compile-Target-JDK>${javac.version.target}</X-Compile-Target-JDK>
+                    </manifestEntries>
+                  </archive>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+
+      <distributionManagement>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+</project>
